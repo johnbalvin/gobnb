@@ -89,7 +89,7 @@ func test2(images bool) ([]Data, error) {
 			}
 		}
 		datas = append(datas, data)
-		log.Printf("Progress getting data: %d/%d\n", i+1, len(ids))
+		log.Printf("Progress getting data: %d/%d id: %s\n", i+1, len(ids), id)
 	}
 	return datas, nil
 }
