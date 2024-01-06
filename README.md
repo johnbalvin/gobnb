@@ -21,7 +21,7 @@ This project is an open-source tool developed in Golang for extracting product i
     )
     func main(){
         //you need to have write permissions, the result will be save inside folder "test"
-        gobnb.Test()
+        gobnb.TestSaveOnDisk()
     }
 ```
 
