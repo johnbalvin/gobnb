@@ -57,7 +57,7 @@ This project is an open-source tool developed in Golang for extracting product i
     func main(){
         roomURL:="https://www.airbnb.com/rooms/[roomID]"
         client := gobnb.DefaulClient()
-        data, err := client.GetFromRoomURL(productURL)
+        data, err := client.GetFromRoomURL(roomURL)
         if err != nil {
             log.Println("test:2 -> err: ", err)
             return
@@ -84,7 +84,7 @@ This project is an open-source tool developed in Golang for extracting product i
         }
         roomURL:="https://www.airbnb.com/rooms/[roomID]"
         client := gobnb.DefaulClient()
-        data,  err := client.GetFromRoomURL(productURL)
+        data,  err := client.GetFromRoomURL(roomURL)
         if err != nil {
             log.Println("test:2 -> err: ", err)
             return
