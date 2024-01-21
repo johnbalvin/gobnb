@@ -36,7 +36,7 @@ This project is an open-source tool developed in Golang for extracting product i
             Out: time.Now().AddDate(0, 0, 7),
         }
         //coordinates should be 2 points one from shouth and one from north(if you think it like a square
-        // this points represent the two points of the diagonal from this square)
+        //this presents the two points of the diagonal from this square)
         coords := search.CoordinatesInput{
             Ne: search.CoordinatesValues{
                 Latitude: 11.626466321336217,
@@ -83,7 +83,7 @@ This project is an open-source tool developed in Golang for extracting product i
             Out: time.Now().AddDate(0, 0, 7),
         }
         //coordinates should be 2 points one from shouth and one from north(if you think it like a square
-        // this points represent the two points of the diagonal from this square)
+        //this presents the two points of the diagonal from this square)
         coords := search.CoordinatesInput{
             Sw: search.CoordinatesValues{
                 Latitude: 0.9539058343440772,
@@ -129,7 +129,7 @@ This project is an open-source tool developed in Golang for extracting product i
             Out: time.Now().AddDate(0, 0, 7),
         }
         //coordinates should be 2 points one from shouth and one from north(if you think it like a square
-        // this points represent the two points of the diagonal from this square)
+        //this presents the two points of the diagonal from this square)
         coords := search.CoordinatesInput{
             Sw: search.CoordinatesValues{
                 Latitude: -1.03866277790021,
