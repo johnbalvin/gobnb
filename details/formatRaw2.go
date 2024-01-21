@@ -1,4 +1,4 @@
-package gobnb
+package details
 
 type metadataData2 struct {
 	Data metadataData_data2 `json:"data"`

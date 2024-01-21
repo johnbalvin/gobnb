@@ -1,4 +1,4 @@
-package gobnb
+package details
 
 type Data struct {
 	Title                string

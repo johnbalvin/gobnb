@@ -1,19 +1,21 @@
-package gobnb
+package details
 
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/johnbalvin/gobnb/trace"
 )
 
-func getFromRoomURL(roomURL string, proxyURL *url.URL) (Data, PriceDependencyInput, []*http.Cookie, error) {
-	req, err := http.NewRequest("GET", roomURL, nil)
+func GetMainRoomIds(mainURL string, proxyURL *url.URL) ([]int64, error) {
+	req, err := http.NewRequest("GET", mainURL, nil)
 	if err != nil {
-		return Data{}, PriceDependencyInput{}, nil, trace.NewOrAdd(1, "main", "getFromRoomURL", err, "")
+		return nil, trace.NewOrAdd(1, "main", "GetMainRoomIds", err, "")
 	}
 	req.Header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
 	req.Header.Add("Accept-Language", "en")
@@ -44,20 +46,27 @@ func getFromRoomURL(roomURL string, proxyURL *url.URL) (Data, PriceDependencyInp
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		return Data{}, PriceDependencyInput{}, nil, trace.NewOrAdd(2, "main", "getFromRoomURL", err, "")
+		return nil, trace.NewOrAdd(2, "main", "GetMainRoomIds", err, "")
 	}
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return Data{}, PriceDependencyInput{}, nil, trace.NewOrAdd(3, "main", "getFromRoomURL", err, "")
+		return nil, trace.NewOrAdd(3, "main", "GetMainRoomIds", err, "")
 	}
 	if resp.StatusCode != 200 {
 		errData := fmt.Sprintf("status: %d headers: %+v", resp.StatusCode, resp.Header)
-		return Data{}, PriceDependencyInput{}, nil, trace.NewOrAdd(4, "main", "getFromRoomURL", trace.ErrStatusCode, errData)
+		return nil, trace.NewOrAdd(4, "main", "GetMainRoomIds", trace.ErrStatusCode, errData)
 	}
-	data, priceDependencyInput, err := ParseBodyDetails(body)
-	if err != nil {
-		return Data{}, PriceDependencyInput{}, nil, trace.NewOrAdd(5, "main", "getFromRoomURL", err, "")
+	var ids []int64
+	listings := regexListing.FindAllString(string(body), -1)
+	for _, listing := range listings {
+		idS := regexNumber.FindString(listing)
+		id, err := strconv.ParseInt(idS, 10, 64)
+		if err != nil {
+			errData := trace.NewOrAdd(5, "main", "GetMainRoomIds", err, "")
+			log.Println(errData)
+			continue
+		}
+		ids = append(ids, id)
 	}
-	data.URL = roomURL
-	return data, priceDependencyInput, resp.Cookies(), nil
+	return ids, nil
 }

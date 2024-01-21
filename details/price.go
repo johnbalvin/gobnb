@@ -1,4 +1,4 @@
-package gobnb
+package details
 
 import (
 	"crypto/tls"
@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/johnbalvin/gobnb/trace"
+	"github.com/johnbalvin/gobnb/utils"
 )
 
 func (pdi PriceDependencyInput) GetPrice(currency string, cookies []*http.Cookie, proxyURL *url.URL) (Price, error) {
@@ -138,13 +139,13 @@ func (pdi PriceDependencyInput) GetPrice(currency string, cookies []*http.Cookie
 	for _, section := range metadataData2.Data.Presentation.StayProductDetailPage.Sections.Section {
 		if section.Section9.Typename == "BookItSection" {
 			pr := section.Section9.StructuredDisplayPrice.PrimaryLine
-			priceCurrency, priceConverted, err := parsePriceSymbol(pr.Price)
+			ammount, currency, err := utils.ParsePriceSymbol(pr.Price)
 			if err != nil {
 				return Price{}, trace.NewOrAdd(5, "main", "PriceDependencyInput Price", err, "")
 			}
 			return Price{
-				Amount:         priceConverted,
-				CurrencySymbol: priceCurrency,
+				Amount:         ammount,
+				CurrencySymbol: currency,
 				Qualifier:      pr.Qualifier,
 			}, nil
 		}

@@ -1,4 +1,4 @@
-package gobnb
+package details
 
 import (
 	"fmt"
@@ -21,8 +21,8 @@ func GetFromRoomURL(roomURL, currency string, proxyURL *url.URL) (Data, error) {
 	return data, nil
 }
 
-func GetFromRoomID(roomID, currency string, proxyURL *url.URL) (Data, error) {
-	roomURL := fmt.Sprintf("https://www.airbnb.com/rooms/%s", roomID)
+func GetFromRoomID(roomID int64, currency string, proxyURL *url.URL) (Data, error) {
+	roomURL := fmt.Sprintf("https://www.airbnb.com/rooms/%d", roomID)
 	data, priceDependencyInput, cookies, err := getFromRoomURL(roomURL, proxyURL)
 	if err != nil {
 		return Data{}, trace.NewOrAdd(1, "main", "GetFromRoomURL", err, "")
@@ -35,8 +35,8 @@ func GetFromRoomID(roomID, currency string, proxyURL *url.URL) (Data, error) {
 	return data, nil
 }
 
-func GetFromRoomIDAndDomain(roomID, domain, currency string, proxyURL *url.URL) (Data, error) {
-	roomURL := fmt.Sprintf("https://%s/rooms/%s", domain, roomID)
+func GetFromRoomIDAndDomain(roomID int64, domain, currency string, proxyURL *url.URL) (Data, error) {
+	roomURL := fmt.Sprintf("https://%s/rooms/%d", domain, roomID)
 	data, priceDependencyInput, cookies, err := getFromRoomURL(roomURL, proxyURL)
 	if err != nil {
 		return Data{}, trace.NewOrAdd(1, "main", "GetFromRoomIDAndDomain", err, "")

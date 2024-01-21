@@ -20,8 +20,36 @@ This project is an open-source tool developed in Golang for extracting product i
         "github.com/johnbalvin/gobnb"
     )
     func main(){
-        //you need to have write permissions, the result will be save inside folder "test"
-        gobnb.TestSaveOnDisk()
+        client := NewClient("USD", nil)
+        // zoom value from 1 - 20, so from the "square" like I said on the coorinates, this represents how much zoom on this squere there is
+        zoomvalue := 2
+        checkIn := search.Check{
+            In:  time.Now().AddDate(0, 0, 1),
+            Out: time.Now().AddDate(0, 0, 7),
+        }
+        //coordinates should be 2 points one from shouth and one from north(if you think it like a square, this points represent the two points of the diagonal from this square)
+        coords := search.CoordinatesInput{
+            Ne: search.CoordinatesValues{
+                Latitude: 11.626466321336217,
+                Longitud: -83.16752421667513,
+            },
+            Sw: search.CoordinatesValues{
+                Latitude: 8.565185490351908,
+                Longitud: -85.62044033549569,
+            },
+        }
+        results, err := client.SearchFirstPage(zoomvalue, coords, checkIn)
+        if err != nil {
+            errData := trace.NewOrAdd(1, "main", "main", err, "")
+            log.Println(errData)
+            return
+        }
+        rawJSON, _ := json.MarshalIndent(results, "", "  ")
+        fmt.Printf("%s", rawJSON) //in case you don't have write permisions
+        if err := os.WriteFile("./searchResult.json", rawJSON, 06444); err != nil {
+            log.Println(err)
+            return
+        }
     }
 ```
 
@@ -32,16 +60,94 @@ This project is an open-source tool developed in Golang for extracting product i
         "github.com/johnbalvin/gobnb"
     )
     func main(){
-        //If you have write permissions errors with the project, try printing the data at least
-        datas,err:=gobnb.TestNoImages()
-        if err!=nil{
-            log.Println("err",err)
+        client := NewClient("EUR", nil)
+        // zoom value from 1 - 20, so from the "square" like I said on the coorinates, this represents how much zoom on this squere there is
+        zoomvalue := 15
+        checkIn := search.Check{
+            In:  time.Now().AddDate(0, 0, 1),
+            Out: time.Now().AddDate(0, 0, 7),
+        }
+        //coordinates should be 2 points one from shouth and one from north(if you think it like a square, this points represent the two points of the diagonal from this square)
+        coords := search.CoordinatesInput{
+            Sw: search.CoordinatesValues{
+                Latitude: 0.9539058343440772,
+                Longitud: -79.65750456127796,
+            },
+            Ne: search.CoordinatesValues{
+                Latitude: 0.9747511155111473,
+                Longitud: -79.64106021485907,
+            },
+        }
+        results, err := client.SearchAll(zoomvalue, coords, checkIn)
+        if err != nil {
+            errData := trace.NewOrAdd(2, "main", "test2", err, "")
+            log.Println(errData)
             return
         }
-        log.Printf("allDatas: %+v\n",datas)
+        rawJSON, _ := json.MarshalIndent(results, "", "  ")
+        fmt.Printf("%s", rawJSON) //in case you don't have write permisions
+        if err := os.WriteFile("./searchResultAll.json", rawJSON, 06444); err != nil {
+            log.Println(err)
+            return
+        }
     }
 ```
+```Go
+    package main
 
+    import (
+        "github.com/johnbalvin/gobnb"
+    )
+    func main(){
+        client := NewClient("MXN", nil)
+        // zoom value from 1 - 20, so from the "square" like I said on the coordinates, this represents how much zoom on this squere there is
+        zoomvalue := 2
+        checkIn := search.Check{
+            In:  time.Now().AddDate(0, 0, 1),
+            Out: time.Now().AddDate(0, 0, 7),
+        }
+        //coordinates should be 2 points one from south and one from north(if you think it like a square, this points represent the two points of the diagonal from this square)
+        coords := search.CoordinatesInput{
+            Sw: search.CoordinatesValues{
+                Latitude: -1.03866277790021,
+                Longitud: -77.53091734683608,
+            },
+            Ne: search.CoordinatesValues{
+                Latitude: -1.1225978433925647,
+                Longitud: -77.59713412765507,
+            },
+        }
+        searchResults, err := client.SearchFirstPage(zoomvalue, coords, checkIn)
+        if err != nil {
+            errData := trace.NewOrAdd(2, "main", "test2", err, "")
+            log.Println(errData)
+            return
+        }
+        rawJSON, _ := json.MarshalIndent(results, "", "  ")
+        fmt.Printf("%s", rawJSON) //in case you don't have write permisions
+        if err := os.WriteFile("./searchResultAll.json", rawJSON, 06444); err != nil {
+            log.Println(err)
+            return
+        }
+        var datas []details.Data
+        for i, result := range searchResults {
+            data, err := client.DetailsFromRoomID(result.RoomID)
+            if err != nil {
+			   errData := trace.NewOrAdd(2, "main", "test2", err, "")
+			   log.Println(errData)
+			   return
+		    }
+		    datas = append(datas, data)
+		    log.Printf("Progress: %d/%d id: %d\n", i+1, len(searchResults), result.RoomID)
+        }   
+        rawJSON2, _ := json.MarshalIndent(datas, "", "  ")
+        fmt.Printf("%s", rawJSON2) //in case you don't have write permisions
+        if err := os.WriteFile("./details.json", rawJSON2, 0644); err != nil {
+		   log.Println(err)
+		   return
+        }
+    }
+```
 
 ### Basic data
 
@@ -56,16 +162,46 @@ This project is an open-source tool developed in Golang for extracting product i
     )
     func main(){
         roomURL:="https://www.airbnb.com/rooms/[roomID]"
-        client := gobnb.DefaulClient()
-        data, err := client.GetFromRoomURL(roomURL)
+        client := gobnb.DefaultClient()
+        data, err := client.DetailsFromRoomURL(roomURL)
         if err != nil {
             log.Println("test:2 -> err: ", err)
             return
         }
-        log.Printf("data: %+v\n",data)
+        rawJSON, _ := json.MarshalIndent(data, "", "  ")
+        fmt.Printf("%s", rawJSON) //in case you don't have write permisions
+        if err := os.WriteFile("./details.json", rawJSON, 0644); err != nil {
+		   log.Println(err)
+		   return
+        }
     }
 ```
 
+```Go
+    package main
+
+    import (
+        "encoding/json"
+        "log"
+        "os"
+        "github.com/johnbalvin/gobnb"
+    )
+    func main(){
+        romID:=[roomID]
+        client := gobnb.DefaultClient()
+        data, err := client.DetailsFromRoomID(romID)
+        if err != nil {
+            log.Println("test:2 -> err: ", err)
+            return
+        }
+        rawJSON, _ := json.MarshalIndent(data, "", "  ")
+        fmt.Printf("%s", rawJSON) //in case you don't have write permisions
+        if err := os.WriteFile("./details.json", rawJSON, 0644); err != nil {
+		   log.Println(err)
+		   return
+        }
+    }
+```
 ### Basic data and images
 ```Go
     package main
@@ -83,8 +219,8 @@ This project is an open-source tool developed in Golang for extracting product i
             return
         }
         roomURL:="https://www.airbnb.com/rooms/[roomID]"
-        client := gobnb.DefaulClient()
-        data,  err := client.GetFromRoomURL(roomURL)
+        client := gobnb.DefaultClient()
+        data,  err := client.DetailsFromRoomURL(roomURL)
         if err != nil {
             log.Println("test:2 -> err: ", err)
             return
@@ -130,7 +266,7 @@ This project is an open-source tool developed in Golang for extracting product i
         }
         client := gobnb.NewClient("MXN", proxyURL)
         roomURL:="https://www.airbnb.com/rooms/[roomID]"
-        data,  err := client.GetFromRoomURL(roomURL)
+        data,  err := client.DetailsFromRoomURL(roomURL)
         if err != nil {
             log.Println("test:2 -> err: ", err)
             continue

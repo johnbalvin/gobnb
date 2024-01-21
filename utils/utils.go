@@ -1,6 +1,7 @@
-package gobnb
+package utils
 
 import (
+	"bytes"
 	"net/url"
 	"regexp"
 	"strings"
@@ -10,6 +11,10 @@ var regexSpace = regexp.MustCompile(`[\s ]+`)
 
 func RemoveSpace(value string) string {
 	return regexSpace.ReplaceAllString(strings.TrimSpace(value), " ")
+}
+
+func RemoveSpaceByte(value []byte) []byte {
+	return regexSpace.ReplaceAll(bytes.TrimSpace(value), []byte(" "))
 }
 
 func ParseProxy(urlToParse, userName, password string) (*url.URL, error) {

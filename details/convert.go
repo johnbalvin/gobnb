@@ -1,8 +1,8 @@
-package gobnb
+package details
 
 import "path/filepath"
 
-func (meta metadataData) Standardize() Data {
+func (meta metadataData) standardize() Data {
 	ev := meta.Data.Presentation.StayProductDetailPage.Sections.Metadata.LoggingContext.EventDataLogging
 	data := Data{
 		Coordinates:    Coordinates{Latitude: ev.Lat, Longitud: ev.Long},

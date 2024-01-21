@@ -1,4 +1,4 @@
-package gobnb
+package details
 
 import (
 	"fmt"
@@ -10,10 +10,10 @@ import (
 	"github.com/johnbalvin/gobnb/trace"
 )
 
-func GetMainRoomIds(mainURL string, proxyURL *url.URL) ([]string, error) {
-	req, err := http.NewRequest("GET", mainURL, nil)
+func getFromRoomURL(roomURL string, proxyURL *url.URL) (Data, PriceDependencyInput, []*http.Cookie, error) {
+	req, err := http.NewRequest("GET", roomURL, nil)
 	if err != nil {
-		return nil, trace.NewOrAdd(1, "main", "GetMainRoomIds", err, "")
+		return Data{}, PriceDependencyInput{}, nil, trace.NewOrAdd(1, "main", "getFromRoomURL", err, "")
 	}
 	req.Header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
 	req.Header.Add("Accept-Language", "en")
@@ -44,21 +44,20 @@ func GetMainRoomIds(mainURL string, proxyURL *url.URL) ([]string, error) {
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, trace.NewOrAdd(2, "main", "GetMainRoomIds", err, "")
+		return Data{}, PriceDependencyInput{}, nil, trace.NewOrAdd(2, "main", "getFromRoomURL", err, "")
 	}
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, trace.NewOrAdd(3, "main", "GetMainRoomIds", err, "")
+		return Data{}, PriceDependencyInput{}, nil, trace.NewOrAdd(3, "main", "getFromRoomURL", err, "")
 	}
 	if resp.StatusCode != 200 {
 		errData := fmt.Sprintf("status: %d headers: %+v", resp.StatusCode, resp.Header)
-		return nil, trace.NewOrAdd(4, "main", "GetMainRoomIds", trace.ErrStatusCode, errData)
+		return Data{}, PriceDependencyInput{}, nil, trace.NewOrAdd(4, "main", "getFromRoomURL", trace.ErrStatusCode, errData)
 	}
-	var ids []string
-	listings := regexListing.FindAllString(string(body), -1)
-	for _, listing := range listings {
-		id := regexNumber.FindString(listing)
-		ids = append(ids, id)
+	data, priceDependencyInput, err := ParseBodyDetails(body)
+	if err != nil {
+		return Data{}, PriceDependencyInput{}, nil, trace.NewOrAdd(5, "main", "getFromRoomURL", err, "")
 	}
-	return ids, nil
+	data.URL = roomURL
+	return data, priceDependencyInput, resp.Cookies(), nil
 }

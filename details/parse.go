@@ -1,4 +1,4 @@
-package gobnb
+package details
 
 import (
 	"bytes"
@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/johnbalvin/gobnb/trace"
+	"github.com/johnbalvin/gobnb/utils"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -16,7 +17,7 @@ func ParseBodyDetails(body []byte) (Data, PriceDependencyInput, error) {
 	if err != nil {
 		return Data{}, PriceDependencyInput{}, trace.NewOrAdd(1, "main", "ParseBodyDetails", err, "")
 	}
-	dataFormated := dataRaw.Standardize()
+	dataFormated := dataRaw.standardize()
 	dataFormated.Language = language
 	priceDependencyInput := PriceDependencyInput{
 		ProducID:    dataRaw.Variables.ID,
@@ -35,7 +36,7 @@ func parseBodyDetails(body []byte) (metadataData, string, string, error) {
 	if err != nil {
 		return metadataData{}, "", "", trace.NewOrAdd(2, "main", "parseBodyDetails", err, "")
 	}
-	htmlData = RemoveSpace(html.UnescapeString(htmlData))
+	htmlData = utils.RemoveSpace(html.UnescapeString(htmlData))
 	language := regexLanguage.FindString(htmlData)
 	language = strings.ReplaceAll(language, `"language":"`, `"`)
 	apiKey := regxApiKey.FindString(string(body))
