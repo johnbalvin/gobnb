@@ -21,13 +21,15 @@ This project is an open-source tool developed in Golang for extracting product i
     )
     func main(){
         client := NewClient("USD", nil)
-        // zoom value from 1 - 20, so from the "square" like I said on the coorinates, this represents how much zoom on this squere there is
+        // zoom value from 1 - 20, so from the "square" like I said on the coorinates
+        // This represents how much zoom there is on this square.
         zoomvalue := 2
         checkIn := search.Check{
             In:  time.Now().AddDate(0, 0, 1),
             Out: time.Now().AddDate(0, 0, 7),
         }
-        //coordinates should be 2 points one from shouth and one from north(if you think it like a square, this points represent the two points of the diagonal from this square)
+        //coordinates should be 2 points one from shouth and one from north(if you think it like a square
+        // this points represent the two points of the diagonal from this square)
         coords := search.CoordinatesInput{
             Ne: search.CoordinatesValues{
                 Latitude: 11.626466321336217,
@@ -61,13 +63,15 @@ This project is an open-source tool developed in Golang for extracting product i
     )
     func main(){
         client := NewClient("EUR", nil)
-        // zoom value from 1 - 20, so from the "square" like I said on the coorinates, this represents how much zoom on this squere there is
+        // zoom value from 1 - 20, so from the "square" like I said on the coorinates
+        // This represents how much zoom there is on this square.
         zoomvalue := 15
         checkIn := search.Check{
             In:  time.Now().AddDate(0, 0, 1),
             Out: time.Now().AddDate(0, 0, 7),
         }
-        //coordinates should be 2 points one from shouth and one from north(if you think it like a square, this points represent the two points of the diagonal from this square)
+        //coordinates should be 2 points one from shouth and one from north(if you think it like a square
+        // this points represent the two points of the diagonal from this square)
         coords := search.CoordinatesInput{
             Sw: search.CoordinatesValues{
                 Latitude: 0.9539058343440772,
@@ -100,13 +104,15 @@ This project is an open-source tool developed in Golang for extracting product i
     )
     func main(){
         client := NewClient("MXN", nil)
-        // zoom value from 1 - 20, so from the "square" like I said on the coordinates, this represents how much zoom on this squere there is
+        // zoom value from 1 - 20, so from the "square" like I said on the coorinates
+        // This represents how much zoom there is on this square.
         zoomvalue := 2
         checkIn := search.Check{
             In:  time.Now().AddDate(0, 0, 1),
             Out: time.Now().AddDate(0, 0, 7),
         }
-        //coordinates should be 2 points one from south and one from north(if you think it like a square, this points represent the two points of the diagonal from this square)
+        //coordinates should be 2 points one from shouth and one from north(if you think it like a square
+        // this points represent the two points of the diagonal from this square)
         coords := search.CoordinatesInput{
             Sw: search.CoordinatesValues{
                 Latitude: -1.03866277790021,
