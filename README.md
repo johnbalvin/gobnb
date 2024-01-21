@@ -4,6 +4,7 @@
 This project is an open-source tool developed in Golang for extracting product information from Airbnb. It's designed to be fast, efficient, and easy to use, making it an ideal solution for developers looking for Airbnb product data.
 
 ## Features
+- Full search support
 - Extracts detailed product information from Airbnb
 - Implemented in Go for performance and efficiency
 - Easy to integrate with existing Go projects
@@ -17,10 +18,14 @@ This project is an open-source tool developed in Golang for extracting product i
     package main
 
     import (
+        "encoding/json"
+        "fmt"
+        "log"
         "github.com/johnbalvin/gobnb"
+        "github.com/johnbalvin/gobnb/search"
     )
     func main(){
-        client := NewClient("USD", nil)
+        client := gobnb.NewClient("USD", nil)
         // zoom value from 1 - 20, so from the "square" like I said on the coorinates
         // This represents how much zoom there is on this square.
         zoomvalue := 2
@@ -59,10 +64,15 @@ This project is an open-source tool developed in Golang for extracting product i
     package main
 
     import (
+        "encoding/json"
+        "fmt"
+        "log"
+        "os"
         "github.com/johnbalvin/gobnb"
+        "github.com/johnbalvin/gobnb/search"
     )
     func main(){
-        client := NewClient("EUR", nil)
+        client := gobnb.NewClient("EUR", nil)
         // zoom value from 1 - 20, so from the "square" like I said on the coorinates
         // This represents how much zoom there is on this square.
         zoomvalue := 15
@@ -100,10 +110,15 @@ This project is an open-source tool developed in Golang for extracting product i
     package main
 
     import (
+        "encoding/json"
+        "fmt"
+        "log"
+        "os"
         "github.com/johnbalvin/gobnb"
+        "github.com/johnbalvin/gobnb/search"
     )
     func main(){
-        client := NewClient("MXN", nil)
+        client := gobnb.NewClient("MXN", nil)
         // zoom value from 1 - 20, so from the "square" like I said on the coorinates
         // This represents how much zoom there is on this square.
         zoomvalue := 2
@@ -162,6 +177,7 @@ This project is an open-source tool developed in Golang for extracting product i
 
     import (
         "encoding/json"
+        "fmt"
         "log"
         "os"
         "github.com/johnbalvin/gobnb"
@@ -188,6 +204,7 @@ This project is an open-source tool developed in Golang for extracting product i
 
     import (
         "encoding/json"
+        "fmt"
         "log"
         "os"
         "github.com/johnbalvin/gobnb"

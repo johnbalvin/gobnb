@@ -1,4 +1,4 @@
-package main
+package gobnb
 
 import (
 	"encoding/json"
