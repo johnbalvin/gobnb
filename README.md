@@ -1,4 +1,4 @@
-# Airbnb Information Extractor in Go
+# Airbnb scraper in Go
 
 ## Overview
 This project is an open-source tool developed in Golang for extracting product information from Airbnb. It's designed to be fast, efficient, and easy to use, making it an ideal solution for developers looking for Airbnb product data.
