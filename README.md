@@ -22,7 +22,7 @@ This project is an open-source tool developed in Golang for extracting product i
         "fmt"
         "log"
         "os"
-	    "time"
+        "time"
         "github.com/johnbalvin/gobnb"
         "github.com/johnbalvin/gobnb/search"
     )
