@@ -47,8 +47,7 @@ This project is an open-source tool developed in Golang for extracting product i
         }
         results, err := client.SearchFirstPage(zoomvalue, coords, checkIn)
         if err != nil {
-            errData := trace.NewOrAdd(1, "main", "main", err, "")
-            log.Println(errData)
+            log.Println(err)
             return
         }
         rawJSON, _ := json.MarshalIndent(results, "", "  ")
@@ -94,8 +93,7 @@ This project is an open-source tool developed in Golang for extracting product i
         }
         results, err := client.SearchAll(zoomvalue, coords, checkIn)
         if err != nil {
-            errData := trace.NewOrAdd(2, "main", "test2", err, "")
-            log.Println(errData)
+            log.Println(err)
             return
         }
         rawJSON, _ := json.MarshalIndent(results, "", "  ")
@@ -140,8 +138,7 @@ This project is an open-source tool developed in Golang for extracting product i
         }
         searchResults, err := client.SearchFirstPage(zoomvalue, coords, checkIn)
         if err != nil {
-            errData := trace.NewOrAdd(2, "main", "test2", err, "")
-            log.Println(errData)
+            log.Println(err)
             return
         }
         rawJSON, _ := json.MarshalIndent(results, "", "  ")
@@ -154,8 +151,7 @@ This project is an open-source tool developed in Golang for extracting product i
         for i, result := range searchResults {
             data, err := client.DetailsFromRoomID(result.RoomID)
             if err != nil {
-			   errData := trace.NewOrAdd(2, "main", "test2", err, "")
-			   log.Println(errData)
+               log.Println(err)
 			   return
 		    }
 		    datas = append(datas, data)
