@@ -21,6 +21,7 @@ This project is an open-source tool developed in Golang for extracting product i
         "encoding/json"
         "fmt"
         "log"
+        "os"
 	    "time"
         "github.com/johnbalvin/gobnb"
         "github.com/johnbalvin/gobnb/search"
