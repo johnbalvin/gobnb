@@ -166,3 +166,18 @@ func test4() {
 	f, _ := os.Create("./test/datas.json")
 	json.NewEncoder(f).Encode(datas)
 }
+func test5() {
+	roomURL := "https://www.airbnb.com/rooms/5264493"
+	client := DefaultClient()
+	data, err := client.DetailsFromRoomURL(roomURL)
+	if err != nil {
+		log.Println("test:2 -> err: ", err)
+		return
+	}
+	rawJSON, _ := json.MarshalIndent(data, "", "  ")
+	fmt.Printf("%s", rawJSON) //in case you don't have write permisions
+	if err := os.WriteFile("./details.json", rawJSON, 0644); err != nil {
+		log.Println(err)
+		return
+	}
+}

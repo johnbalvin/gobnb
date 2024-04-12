@@ -32,7 +32,7 @@ func parseBodyDetails(body []byte) (metadataData, string, string, error) {
 	if err != nil {
 		return metadataData{}, "", "", trace.NewOrAdd(1, "main", "parseBodyDetails", err, "")
 	}
-	htmlData, err := doc.Find("#data-deferred-state").Html()
+	htmlData, err := doc.Find("#data-deferred-state-0").Html()
 	if err != nil {
 		return metadataData{}, "", "", trace.NewOrAdd(2, "main", "parseBodyDetails", err, "")
 	}

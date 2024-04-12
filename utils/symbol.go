@@ -13,6 +13,9 @@ var regxPrice = regexp.MustCompile(`\d+`)
 func ParsePriceSymbol(priceRaw string) (float32, string, error) {
 	priceRaw = strings.ReplaceAll(priceRaw, ",", "")
 	priceNumber := regxPrice.FindString(priceRaw)
+	if priceNumber == "" {
+		return 0, "", nil
+	}
 	priceCurrency := RemoveSpace(strings.ReplaceAll(priceRaw, priceNumber, ""))
 	priceCurrency = strings.ReplaceAll(priceCurrency, "-", "")
 	splited := strings.Split(priceRaw, "")
