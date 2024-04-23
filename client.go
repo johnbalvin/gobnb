@@ -1,4 +1,4 @@
-package gobnb
+package main
 
 import (
 	"net/url"
