@@ -56,7 +56,7 @@ func Get(proxyURL *url.URL) (string, error) {
 		return "", trace.NewOrAdd(4, "main", "api", trace.ErrStatusCode, errData)
 	}
 	apiKey := regxApiKey.FindString(string(body))
-	apiKey = strings.ReplaceAll(apiKey, `"key":"`, "")
+	apiKey = strings.ReplaceAll(apiKey, `"api_config":{"key":"`, "")
 	apiKey = strings.ReplaceAll(apiKey, `"`, "")
 	if apiKey == "" {
 		return "", trace.NewOrAdd(5, "main", "api", trace.ErrEmpty, "")

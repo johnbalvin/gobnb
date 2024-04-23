@@ -20,7 +20,6 @@ func (input InputData) SearchFirstPage(currency string, proxyURL *url.URL) ([]Da
 	if err != nil {
 		return nil, trace.NewOrAdd(1, "search", "SearchFirstPage", err, "")
 	}
-	log.Printf("key: *%s*\n", apiKey)
 	result, err := input.search("", currency, apiKey, proxyURL)
 	if err != nil {
 		return nil, trace.NewOrAdd(2, "search", "SearchFirstPage", err, "")

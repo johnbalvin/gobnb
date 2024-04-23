@@ -1,4 +1,4 @@
-package main
+package gobnb
 
 import (
 	"encoding/json"
@@ -12,9 +12,6 @@ import (
 	"github.com/johnbalvin/gobnb/trace"
 )
 
-func main() {
-	test1()
-}
 func test1() {
 	client := NewClient("USD", nil)
 	// zoom value from 1 - 20, so from the "square" like I said on the coorinates, this represents how much zoom on this squere there is

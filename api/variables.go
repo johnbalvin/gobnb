@@ -5,5 +5,5 @@ import "regexp"
 const ep = "https://www.airbnb.com"
 
 var (
-	regxApiKey = regexp.MustCompile(`"key":".+?"`)
+	regxApiKey = regexp.MustCompile(`"api_config":{"key":".+?"`)
 )
