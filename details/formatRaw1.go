@@ -193,6 +193,7 @@ type persistedQuery struct {
 }
 type PdpSectionsRequest struct {
 	Adults                        string   `json:"adults"`
+	AmenityFilters                *string  `json:"amenityFilters"`
 	BypassTargetings              bool     `json:"bypassTargetings"`
 	CategoryTag                   *string  `json:"categoryTag"`
 	CauseId                       *string  `json:"causeId"`
@@ -202,6 +203,7 @@ type PdpSectionsRequest struct {
 	DisplayExtensions             *string  `json:"displayExtensions"`
 	FederatedSearchId             *string  `json:"federatedSearchId"`
 	ForceBoostPriorityMessageType *string  `json:"forceBoostPriorityMessageType"`
+	HostPreview                   *bool    `json:"hostPreview"`
 	Infants                       *string  `json:"infants"`
 	InteractionType               *string  `json:"interactionType"`
 	Layouts                       []string `json:"layouts"`

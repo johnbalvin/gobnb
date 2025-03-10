@@ -27,15 +27,15 @@ func NewClient(currency string, proxyURL *url.URL) Client {
 	return client
 }
 
-func (cl Client) DetailsFromRoomURL(roomURL string) (details.Data, error) {
-	return details.GetFromRoomURL(roomURL, cl.Currency, cl.ProxyURL)
+func (cl Client) DetailsFromRoomURL(roomURL string, check_in_out search.Check) (details.Data, error) {
+	return details.GetFromRoomURL(roomURL, check_in_out, cl.Currency, cl.ProxyURL)
 }
-func (cl Client) DetailsFromRoomID(roomID int64) (details.Data, error) {
-	return details.GetFromRoomID(roomID, cl.Currency, cl.ProxyURL)
+func (cl Client) DetailsFromRoomID(roomID int64, check_in_out search.Check) (details.Data, error) {
+	return details.GetFromRoomID(roomID, check_in_out, cl.Currency, cl.ProxyURL)
 }
 
-func (cl Client) DetailsFromRoomIDAndDomain(roomID int64, domain string) (details.Data, error) {
-	return details.GetFromRoomIDAndDomain(roomID, domain, cl.Currency, cl.ProxyURL)
+func (cl Client) DetailsFromRoomIDAndDomain(roomID int64, domain string, check_in_out search.Check) (details.Data, error) {
+	return details.GetFromRoomIDAndDomain(roomID, domain, check_in_out, cl.Currency, cl.ProxyURL)
 }
 
 func (cl Client) DetailsMainRoomIds(mailURL string) ([]int64, error) {

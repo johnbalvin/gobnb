@@ -51,8 +51,8 @@ func (input InputData) SearchAll(currency string, proxyURL *url.URL) ([]Data, er
 	return allResults, nil
 }
 func (input InputData) search(cursor, currency, apiKey string, proxyURL *url.URL) (rootdatapresentationstayssearchResults, error) {
-	checkinS := getStringDate(input.Check.In)
-	checkoutS := getStringDate(input.Check.Out)
+	checkinS := GetStringDate(input.Check.In)
+	checkoutS := GetStringDate(input.Check.Out)
 	hours := input.Check.Out.Sub(input.Check.In).Hours()
 	days := int(hours / 24)
 	urlParsed, err := url.Parse(ep)

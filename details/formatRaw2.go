@@ -17,7 +17,8 @@ type section7 struct {
 	Metadata metadata5  `json:"metadata"`
 }
 type section8 struct {
-	Section9 section9 `json:"section"`
+	SectionId string   `json:"sectionId"`
+	Section9  section9 `json:"section"`
 }
 type section9 struct {
 	Typename               string                 `json:"__typename"`

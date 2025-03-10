@@ -31,7 +31,7 @@ This project is an open-source tool developed in Golang for extracting product i
         // zoom value from 1 - 20, so from the "square" like I said on the coorinates
         // This represents how much zoom there is on this square.
         zoomvalue := 2
-        checkIn := search.Check{
+        check := search.Check{
             In:  time.Now().AddDate(0, 0, 1),
             Out: time.Now().AddDate(0, 0, 7),
         }
@@ -47,7 +47,7 @@ This project is an open-source tool developed in Golang for extracting product i
                 Longitud: -85.62044033549569,
             },
         }
-        results, err := client.SearchFirstPage(zoomvalue, coords, checkIn)
+        results, err := client.SearchFirstPage(zoomvalue, coords, check)
         if err != nil {
             log.Println(err)
             return
@@ -124,7 +124,7 @@ This project is an open-source tool developed in Golang for extracting product i
         // zoom value from 1 - 20, so from the "square" like I said on the coorinates
         // This represents how much zoom there is on this square.
         zoomvalue := 2
-        checkIn := search.Check{
+        checkInOut := search.Check{
             In:  time.Now().AddDate(0, 0, 1),
             Out: time.Now().AddDate(0, 0, 7),
         }
@@ -140,7 +140,7 @@ This project is an open-source tool developed in Golang for extracting product i
                 Longitud: -77.59713412765507,
             },
         }
-        searchResults, err := client.SearchFirstPage(zoomvalue, coords, checkIn)
+        searchResults, err := client.SearchFirstPage(zoomvalue, coords, checkInOut)
         if err != nil {
             log.Println(err)
             return
@@ -153,7 +153,7 @@ This project is an open-source tool developed in Golang for extracting product i
         }
         var datas []details.Data
         for i, result := range searchResults {
-            data, err := client.DetailsFromRoomID(result.RoomID)
+            data, err := client.DetailsFromRoomID(result.RoomID, checkInOut)
             if err != nil {
                log.Println(err)
 			   return
@@ -185,7 +185,11 @@ This project is an open-source tool developed in Golang for extracting product i
     func main(){
         roomURL:="https://www.airbnb.com/rooms/[roomID]"
         client := gobnb.DefaultClient()
-        data, err := client.DetailsFromRoomURL(roomURL)
+        checkInOut := search.Check{
+            In:  time.Now().AddDate(0, 0, 1),
+            Out: time.Now().AddDate(0, 0, 7),
+        }
+        data, err := client.DetailsFromRoomURL(roomURL, checkInOut)
         if err != nil {
             log.Println("test:2 -> err: ", err)
             return
@@ -211,8 +215,12 @@ This project is an open-source tool developed in Golang for extracting product i
     )
     func main(){
         romID:=[roomID]
+        checkInOut := search.Check{
+            In:  time.Now().AddDate(0, 0, 1),
+            Out: time.Now().AddDate(0, 0, 7),
+        }
         client := gobnb.DefaultClient()
-        data, err := client.DetailsFromRoomID(romID)
+        data, err := client.DetailsFromRoomID(romID, checkInOut)
         if err != nil {
             log.Println("test:2 -> err: ", err)
             return
@@ -243,7 +251,12 @@ This project is an open-source tool developed in Golang for extracting product i
         }
         roomURL:="https://www.airbnb.com/rooms/[roomID]"
         client := gobnb.DefaultClient()
-        data,  err := client.DetailsFromRoomURL(roomURL)
+        checkInOut := search.Check{
+          //you can ommit the checkin, checkout date if you dont want the price
+          //  In:  time.Now().AddDate(0, 0, 1),
+          //  Out: time.Now().AddDate(0, 0, 7),
+        }
+        data,  err := client.DetailsFromRoomURL(roomURL, checkInOut)
         if err != nil {
             log.Println("test:2 -> err: ", err)
             return
@@ -289,7 +302,11 @@ This project is an open-source tool developed in Golang for extracting product i
         }
         client := gobnb.NewClient("MXN", proxyURL)
         roomURL:="https://www.airbnb.com/rooms/[roomID]"
-        data,  err := client.DetailsFromRoomURL(roomURL)
+        checkInOut := search.Check{
+            In:  time.Now().AddDate(0, 0, 1),
+            Out: time.Now().AddDate(0, 0, 7),
+        }
+        data,  err := client.DetailsFromRoomURL(roomURL, checkInOut)
         if err != nil {
             log.Println("test:2 -> err: ", err)
             continue

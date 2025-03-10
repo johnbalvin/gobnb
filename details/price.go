@@ -9,29 +9,28 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/johnbalvin/gobnb/search"
 	"github.com/johnbalvin/gobnb/trace"
 	"github.com/johnbalvin/gobnb/utils"
 )
 
-func (pdi PriceDependencyInput) GetPrice(currency string, cookies []*http.Cookie, proxyURL *url.URL) (Price, error) {
+func (pdi PriceDependencyInput) GetPrice(check_in_out search.Check, currency string, cookies []*http.Cookie, proxyURL *url.URL) (Price, error) {
 	urlParsed, err := url.Parse(ep)
 	if err != nil {
-		return Price{}, trace.NewOrAdd(1, "main", "PriceDependencyInput Price", err, "")
+		return Price{}, trace.NewOrAdd(1, "details", "PriceDependencyInput GetPrice", err, "")
 	}
-	query := url.Values{}
-	query.Add("operationName", "StaysPdpSections")
-	query.Add("locale", "en")
-	query.Add("currency", currency)
 	entension := metadatExtension{
 		PersistedQuery: persistedQuery{
 			Version:    1,
-			Sha256Hash: "e6a7821cf0f78dfc0baab6fd111027eb2976355f2aecbb84bc2086ee6e57161b",
+			Sha256Hash: "6f2c582da19b486271d60c4b19e7bdd1147184662f1f4e9a83b08211a73d7343",
 		},
 	}
 	dataRawExtension, err := json.Marshal(entension)
 	if err != nil {
-		return Price{}, trace.NewOrAdd(2, "main", "getMetadata", err, "")
+		return Price{}, trace.NewOrAdd(2, "details", "getMetadata", err, "")
 	}
+	checkin := search.GetStringDate(check_in_out.In)
+	checkout := search.GetStringDate(check_in_out.Out)
 	variablesData := metadataVariables{
 		ID: pdi.ProducID,
 		PdpSectionsRequest: PdpSectionsRequest{
@@ -66,23 +65,37 @@ func (pdi PriceDependencyInput) GetPrice(currency string, cookies []*http.Cookie
 			TranslateUgc:                  nil,
 			UseNewSectionWrapperApi:       false,
 			SectionIds: []string{
-				"CANCELLATION_POLICY_PICKER_MODAL", "BOOK_IT_CALENDAR_SHEET", "POLICIES_DEFAULT", "BOOK_IT_SIDEBAR", "URGENCY_COMMITMENT_SIDEBAR",
-				"BOOK_IT_NAV", "BOOK_IT_FLOATING_FOOTER", "EDUCATION_FOOTER_BANNER", "URGENCY_COMMITMENT", "EDUCATION_FOOTER_BANNER_MODAL"},
-			CheckIn:        nil,
-			CheckOut:       nil,
+				"BOOK_IT_FLOATING_FOOTER",
+				"POLICIES_DEFAULT",
+				"EDUCATION_FOOTER_BANNER_MODAL",
+				"BOOK_IT_SIDEBAR",
+				"URGENCY_COMMITMENT_SIDEBAR",
+				"BOOK_IT_NAV",
+				"MESSAGE_BANNER",
+				"HIGHLIGHTS_DEFAULT",
+				"EDUCATION_FOOTER_BANNER",
+				"URGENCY_COMMITMENT",
+				"BOOK_IT_CALENDAR_SHEET",
+				"CANCELLATION_POLICY_PICKER_MODAL"},
+			CheckIn:        &checkin,
+			CheckOut:       &checkout,
 			P3ImpressionId: pdi.ImpresionID,
 		},
 	}
 	dataRawVariables, err := json.Marshal(variablesData)
 	if err != nil {
-		return Price{}, trace.NewOrAdd(2, "main", "PriceDependencyInput Price", err, "")
+		return Price{}, trace.NewOrAdd(3, "details", "PriceDependencyInput GetPrice", err, "")
 	}
+	query := url.Values{}
+	query.Add("operationName", "StaysPdpSections")
+	query.Add("locale", "en")
+	query.Add("currency", currency)
 	query.Add("variables", string(dataRawVariables))
 	query.Add("extensions", string(dataRawExtension))
 	urlParsed.RawQuery = query.Encode()
 	req, err := http.NewRequest("GET", urlParsed.String(), nil)
 	if err != nil {
-		return Price{}, trace.NewOrAdd(1, "main", "PriceDependencyInput Price", err, "")
+		return Price{}, trace.NewOrAdd(4, "details", "PriceDependencyInput GetPrice", err, "")
 	}
 	req.Header.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
 	req.Header.Add("Accept-Language", "en")
@@ -121,27 +134,27 @@ func (pdi PriceDependencyInput) GetPrice(currency string, cookies []*http.Cookie
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		return Price{}, trace.NewOrAdd(3, "main", "PriceDependencyInput Price", err, "")
+		return Price{}, trace.NewOrAdd(5, "details", "PriceDependencyInput GetPrice", err, "")
 	}
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return Price{}, trace.NewOrAdd(4, "main", "PriceDependencyInput Price", err, "")
+		return Price{}, trace.NewOrAdd(6, "details", "PriceDependencyInput GetPrice", err, "")
 	}
 	var metadataData2 metadataData2
 	if err := json.Unmarshal(body, &metadataData2); err != nil {
-		return Price{}, trace.NewOrAdd(5, "main", "PriceDependencyInput Price", err, "")
+		return Price{}, trace.NewOrAdd(7, "details", "PriceDependencyInput GetPrice", err, "")
 	}
 	if resp.StatusCode != 200 {
 		errData := fmt.Sprintf("status: %d headers: %+v", resp.StatusCode, resp.Header)
-		return Price{}, trace.NewOrAdd(6, "main", "PriceDependencyInput Price", trace.ErrStatusCode, errData)
+		return Price{}, trace.NewOrAdd(8, "details", "PriceDependencyInput GetPrice", trace.ErrStatusCode, errData)
 	}
 	//log.Printf("price 1: %+v\n", metadataData2.Data.Presentation.StayProductDetailPage.Sections.Metadata.BookingPrefetchData.P3_display_rate)
 	for _, section := range metadataData2.Data.Presentation.StayProductDetailPage.Sections.Section {
-		if section.Section9.Typename == "BookItSection" {
+		if section.SectionId == "BOOK_IT_SIDEBAR" {
 			pr := section.Section9.StructuredDisplayPrice.PrimaryLine
 			ammount, currency, err := utils.ParsePriceSymbol(pr.Price)
 			if err != nil {
-				return Price{}, trace.NewOrAdd(5, "main", "PriceDependencyInput Price", err, "")
+				return Price{}, trace.NewOrAdd(9, "details", "PriceDependencyInput GetPrice", err, "")
 			}
 			return Price{
 				Amount:         ammount,

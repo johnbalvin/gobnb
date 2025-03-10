@@ -16,7 +16,7 @@ func test1() {
 	client := NewClient("USD", nil)
 	// zoom value from 1 - 20, so from the "square" like I said on the coorinates, this represents how much zoom on this squere there is
 	zoomvalue := 2
-	checkIn := search.Check{
+	checkInOut := search.Check{
 		In:  time.Now().AddDate(0, 0, 1),
 		Out: time.Now().AddDate(0, 0, 7),
 	}
@@ -31,7 +31,7 @@ func test1() {
 			Longitud: -85.62044033549569,
 		},
 	}
-	results, err := client.SearchFirstPage(zoomvalue, coords, checkIn)
+	results, err := client.SearchFirstPage(zoomvalue, coords, checkInOut)
 	if err != nil {
 		errData := trace.NewOrAdd(1, "main", "test2", err, "")
 		log.Println(errData)
@@ -48,7 +48,7 @@ func test2() {
 	client := NewClient("EUR", nil)
 	// zoom value from 1 - 20, so from the "square" like I said on the coorinates, this represents how much zoom on this squere there is
 	zoomvalue := 9
-	checkIn := search.Check{
+	checkInOut := search.Check{
 		In:  time.Now().AddDate(0, 0, 1),
 		Out: time.Now().AddDate(0, 0, 7),
 	}
@@ -63,7 +63,7 @@ func test2() {
 			Longitud: -79.64106021485907,
 		},
 	}
-	results, err := client.SearchAll(zoomvalue, coords, checkIn)
+	results, err := client.SearchAll(zoomvalue, coords, checkInOut)
 	if err != nil {
 		errData := trace.NewOrAdd(1, "main", "test2", err, "")
 		log.Println(errData)
@@ -79,7 +79,7 @@ func test2() {
 func test3() {
 	client := NewClient("MXN", nil)
 	zoomvalue := 2
-	checkIn := search.Check{
+	checkInOut := search.Check{
 		In:  time.Now().AddDate(0, 0, 1),
 		Out: time.Now().AddDate(0, 0, 7),
 	}
@@ -93,7 +93,7 @@ func test3() {
 			Longitud: -77.59713412765507,
 		},
 	}
-	searchResults, err := client.SearchFirstPage(zoomvalue, coords, checkIn)
+	searchResults, err := client.SearchFirstPage(zoomvalue, coords, checkInOut)
 	if err != nil {
 		errData := trace.NewOrAdd(2, "main", "test2", err, "")
 		log.Println(errData)
@@ -107,7 +107,7 @@ func test3() {
 	}
 	var datas []details.Data
 	for i, result := range searchResults {
-		data, err := client.DetailsFromRoomID(result.RoomID)
+		data, err := client.DetailsFromRoomID(result.RoomID, checkInOut)
 		if err != nil {
 			errData := trace.NewOrAdd(2, "main", "test2", err, "")
 			log.Println(errData)
@@ -129,6 +129,10 @@ func test4() {
 		log.Println("test 1 -> err: ", err)
 		return
 	}
+	checkInOut := search.Check{
+		In:  time.Now().AddDate(0, 0, 1),
+		Out: time.Now().AddDate(0, 0, 7),
+	}
 	client := NewClient("USD", nil)
 	mainURL := "https://www.airbnb.com"
 	ids, err := client.DetailsMainRoomIds(mainURL)
@@ -140,7 +144,7 @@ func test4() {
 	for i, id := range ids {
 		folderPath := fmt.Sprintf("./test/%d/images", i)
 		os.MkdirAll(folderPath, 0644)
-		data, err := client.DetailsFromRoomID(id)
+		data, err := client.DetailsFromRoomID(id, checkInOut)
 		if err != nil {
 			log.Println("test1 -> err: ", err)
 			continue
@@ -169,7 +173,11 @@ func test4() {
 func test5() {
 	roomURL := "https://www.airbnb.com/rooms/5264493"
 	client := DefaultClient()
-	data, err := client.DetailsFromRoomURL(roomURL)
+	checkIn := search.Check{
+		In:  time.Now().AddDate(0, 0, 1),
+		Out: time.Now().AddDate(0, 0, 7),
+	}
+	data, err := client.DetailsFromRoomURL(roomURL, checkIn)
 	if err != nil {
 		log.Println("test:2 -> err: ", err)
 		return

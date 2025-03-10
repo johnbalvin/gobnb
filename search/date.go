@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func getStringDate(date time.Time) string {
+func GetStringDate(date time.Time) string {
 	day := fmt.Sprintf("%d", date.Day())
 	month := fmt.Sprintf("%d", date.Month())
 	year := fmt.Sprintf("%d", date.Year())
